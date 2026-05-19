@@ -1,0 +1,438 @@
+# Therapeutic Candidate Decision Record (TCDR) Schema
+# Version: 1.0.0
+# License: Apache 2.0
+# Specification: RLO_GV1_TCDR_STANDARDS_v1.0
+# Author: Julian Borges, MD, MS — Frontier Translational Research Lab
+# Affiliation: Department of Computer Science, Boston University
+# Date: 2026-05-18
+
+schema_metadata:
+  schema_name: "Therapeutic Candidate Decision Record"
+  schema_abbreviation: "TCDR"
+  schema_version: "1.0.0"
+  schema_license: "Apache-2.0"
+  schema_uri: "https://github.com/fxmedus/aidd-gov/schemas/tcdr/v1.0"
+  specification_document: "PAPER_GV1_TCDR_STANDARDS"
+  field_group_count: 9
+  total_required_fields: 28
+  total_recommended_fields: 18
+  total_optional_fields: 12
+
+# =============================================================================
+# FIELD GROUP 1: Candidate Identity
+# Purpose: Uniquely identify the therapeutic candidate and its modality class
+# =============================================================================
+field_group_1_candidate_identity:
+  tcdr_id:
+    type: string
+    format: "TCDR-{MODALITY_CODE}-{YYYYMMDD}-{SEQ}"
+    description: "Globally unique identifier for this therapeutic candidate decision record"
+    required: true
+    example: "TCDR-SM-20260518-001"
+
+  name:
+    type: string
+    description: "Human readable name for the therapeutic candidate"
+    required: true
+    example: "Idebenone"
+
+  canonical_smiles:
+    type: string
+    description: "Canonical SMILES representation. Required for small molecules. Null for biologics."
+    required: false
+    conditional: "Required when modality is small_molecule or peptide"
+
+  sequence:
+    type: string
+    description: "Amino acid or nucleotide sequence. Required for biologics, ASO, siRNA, mRNA."
+    required: false
+    conditional: "Required when modality is peptide, antibody, antisense, sirna, mrna, or cell_therapy"
+
+  modality:
+    type: enum
+    values:
+      - small_molecule
+      - peptide
+      - antibody
+      - antisense
+      - sirna
+      - mrna
+      - aav_gene_therapy
+      - lnp_gene_therapy
+      - cell_therapy
+      - other
+    description: "Therapeutic modality class"
+    required: true
+
+  version:
+    type: string
+    format: "semver"
+    description: "Semantic version of this TCDR instance"
+    required: true
+    example: "1.0.0"
+
+  created_date:
+    type: string
+    format: "ISO-8601"
+    description: "Date this TCDR was created"
+    required: true
+    example: "2026-05-18"
+
+# =============================================================================
+# FIELD GROUP 2: Biological Mechanism
+# Purpose: Define the biological target, mechanism, and supporting evidence
+# =============================================================================
+field_group_2_biological_mechanism:
+  target_gene:
+    type: string
+    description: "HGNC approved gene symbol for the primary target"
+    required: true
+    example: "NDUFS1"
+
+  target_protein:
+    type: string
+    description: "Full protein name"
+    required: true
+    example: "NADH-ubiquinone oxidoreductase 75 kDa subunit, mitochondrial"
+
+  uniprot_id:
+    type: string
+    format: "UniProt accession"
+    description: "UniProt accession number for the target protein"
+    required: true
+    example: "P28331"
+
+  mechanism_of_action:
+    type: string
+    description: "Free text description of the proposed mechanism of action"
+    required: true
+
+  evidence_type:
+    type: enum
+    values:
+      - computational
+      - in_vitro
+      - in_vivo
+      - clinical
+    description: "Highest level of evidence supporting the mechanism"
+    required: true
+
+  evidence_references:
+    type: array
+    items:
+      type: string
+      format: "DOI"
+    description: "List of DOIs supporting the biological mechanism"
+    required: true
+    min_items: 1
+
+# =============================================================================
+# FIELD GROUP 3: Disease and Tissue Context
+# Purpose: Specify the disease indication, tissue targets, and patient population
+# =============================================================================
+field_group_3_disease_tissue_context:
+  disease_name:
+    type: string
+    description: "Primary disease indication"
+    required: true
+    example: "Mitochondrial complex I deficiency, nuclear type 1"
+
+  orphanet_id:
+    type: string
+    format: "ORPHA:{numeric}"
+    description: "Orphanet identifier for rare diseases. Null for non-rare indications."
+    required: false
+    conditional: "Required when disease is classified as rare"
+    example: "ORPHA:2609"
+
+  omim_id:
+    type: string
+    format: "OMIM:{numeric}"
+    description: "OMIM identifier for the disease phenotype"
+    recommended: true
+    example: "OMIM:252010"
+
+  tissue_targets:
+    type: array
+    items:
+      type: string
+    description: "List of primary tissue targets for the therapeutic"
+    required: true
+    min_items: 1
+    example: ["cardiac_muscle", "skeletal_muscle", "central_nervous_system"]
+
+  cell_types:
+    type: array
+    items:
+      type: string
+    description: "Specific cell types targeted or affected"
+    recommended: true
+    example: ["cardiomyocytes", "neurons", "skeletal_myocytes"]
+
+  patient_population_estimate:
+    type: string
+    description: "Estimated number of patients in the target population"
+    recommended: true
+    example: "1 in 10,000 to 1 in 20,000 live births"
+
+  variant_ids:
+    type: array
+    items:
+      type: string
+    description: "ClinVar or dbSNP variant identifiers relevant to the indication"
+    required: false
+
+# =============================================================================
+# FIELD GROUP 4: Modality Details
+# Purpose: Capture modality-specific attributes (vector, capsid, delivery)
+# =============================================================================
+field_group_4_modality_details:
+  modality:
+    type: string
+    description: "Cross-reference to field_group_1.modality"
+    required: true
+
+  vector_type:
+    type: string
+    description: "Vector type for gene therapy modalities (e.g., AAV, lentivirus, LNP)"
+    required: false
+    conditional: "Required when modality is aav_gene_therapy or lnp_gene_therapy"
+
+  capsid_serotype:
+    type: string
+    description: "AAV capsid serotype"
+    required: false
+    conditional: "Required when modality is aav_gene_therapy"
+    example: "AAV9"
+
+  delivery_route:
+    type: enum
+    values:
+      - systemic_iv
+      - intrathecal
+      - intramuscular
+      - local_organ
+      - oral
+      - inhaled
+      - topical
+      - other
+    description: "Primary delivery route for the therapeutic"
+    required: true
+
+  organ_targeting_strategy:
+    type: string
+    description: "Description of organ or tissue targeting approach"
+    recommended: true
+
+# =============================================================================
+# FIELD GROUP 5: Delivery and Biodistribution
+# Purpose: Characterize predicted delivery, penetration, and localization
+# =============================================================================
+field_group_5_delivery_biodistribution:
+  predicted_tissue_penetration:
+    type: string
+    description: "Qualitative or quantitative assessment of tissue penetration"
+    recommended: true
+
+  blood_brain_barrier:
+    type: boolean
+    description: "Whether the candidate is expected to cross the blood-brain barrier"
+    required: true
+
+  mitochondrial_targeting:
+    type: boolean
+    description: "Whether the candidate is designed for mitochondrial localization"
+    required: true
+
+  subcellular_localization:
+    type: string
+    description: "Expected subcellular compartment (e.g., mitochondrial matrix, cytoplasm)"
+    recommended: true
+
+  dose_range_estimate:
+    type: string
+    description: "Estimated therapeutic dose range with units"
+    recommended: true
+
+# =============================================================================
+# FIELD GROUP 6: Manufacturability
+# Purpose: Assess feasibility of manufacturing and scale-up
+# =============================================================================
+field_group_6_manufacturability:
+  synthetic_accessibility_score:
+    type: number
+    format: "float"
+    range: [1.0, 10.0]
+    description: "RDKit SA score (1 = easy, 10 = difficult). Applicable to small molecules."
+    required: false
+    conditional: "Required when modality is small_molecule"
+
+  manufacturing_platform:
+    type: string
+    description: "Manufacturing platform for biologics (e.g., CHO, HEK293, E. coli, baculovirus)"
+    required: false
+    conditional: "Required when modality is antibody, aav_gene_therapy, lnp_gene_therapy, or cell_therapy"
+
+  cogs_estimate_range:
+    type: string
+    description: "Estimated cost of goods sold range per dose"
+    recommended: true
+
+  scalability_assessment:
+    type: enum
+    values:
+      - lab_scale
+      - pilot
+      - commercial
+      - unknown
+    description: "Current manufacturing scale assessment"
+    required: true
+
+  cmc_readiness:
+    type: enum
+    values:
+      - concept
+      - feasibility
+      - process_dev
+      - validated
+    description: "Chemistry, Manufacturing, and Controls readiness level"
+    required: true
+
+# =============================================================================
+# FIELD GROUP 7: Safety
+# Purpose: Enumerate known and predicted safety liabilities
+# =============================================================================
+field_group_7_safety:
+  predicted_off_targets:
+    type: array
+    items:
+      type: string
+    description: "List of predicted off-target interactions"
+    required: true
+
+  hepatotoxicity_flag:
+    type: boolean
+    description: "Whether hepatotoxicity risk has been identified"
+    required: true
+
+  cardiotoxicity_flag:
+    type: boolean
+    description: "Whether cardiotoxicity risk has been identified"
+    required: true
+
+  immunogenicity_risk:
+    type: enum
+    values:
+      - low
+      - moderate
+      - high
+      - unknown
+    description: "Predicted immunogenicity risk level"
+    required: true
+
+  known_contraindications:
+    type: array
+    items:
+      type: string
+    description: "Known contraindications or drug interactions"
+    recommended: true
+
+# =============================================================================
+# FIELD GROUP 8: Evidence Gaps
+# Purpose: Explicitly document uncertainty, missing data, and next experiments
+# =============================================================================
+field_group_8_evidence_gaps:
+  missing_data:
+    type: array
+    items:
+      type: string
+    description: "List of data types that are absent or incomplete"
+    required: true
+
+  uncertainty_sources:
+    type: array
+    items:
+      type: string
+    description: "Sources of uncertainty in the current evidence base"
+    required: true
+
+  confidence_level:
+    type: enum
+    values:
+      - hypothesis
+      - preliminary
+      - supported
+      - validated
+    description: "Overall confidence level in the therapeutic candidate"
+    required: true
+
+  key_experiments_needed:
+    type: array
+    items:
+      type: string
+    description: "Prioritized list of experiments required to reduce uncertainty"
+    required: true
+    min_items: 1
+
+# =============================================================================
+# FIELD GROUP 9: Advancement Logic
+# Purpose: Capture the go/no-go decision and its rationale
+# =============================================================================
+field_group_9_advancement_logic:
+  recommendation:
+    type: enum
+    values:
+      - advance
+      - revise
+      - hold
+      - terminate
+    description: "Advancement recommendation for this candidate"
+    required: true
+
+  rationale:
+    type: string
+    description: "Free text rationale for the advancement decision"
+    required: true
+
+  stage_gate_id:
+    type: string
+    description: "Reference to the platform stage gate governing this decision"
+    recommended: true
+
+  decision_date:
+    type: string
+    format: "ISO-8601"
+    description: "Date the advancement decision was recorded"
+    required: true
+
+  reviewer:
+    type: string
+    description: "Name or identifier of the decision reviewer"
+    required: true
+
+# =============================================================================
+# METADATA
+# Purpose: Versioning, provenance, and audit fields
+# =============================================================================
+metadata:
+  tcdr_version:
+    type: string
+    description: "Version of this TCDR instance (mirrors field_group_1.version)"
+    required: true
+
+  schema_version:
+    type: string
+    description: "Version of the TCDR schema used to produce this record"
+    required: true
+    example: "1.0.0"
+
+  platform_source:
+    type: string
+    description: "Name of the computational platform that generated this TCDR (if any)"
+    required: false
+    example: "PipelineEngine v0.S76"
+
+  audit_trail_ref:
+    type: string
+    description: "URI or identifier for the full audit trail"
+    required: false

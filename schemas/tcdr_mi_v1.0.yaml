@@ -1,0 +1,287 @@
+# TCDR-MI: Minimum Information for Therapeutic Candidate Decision Records
+# Version: 1.0.0
+# License: Apache 2.0
+# Companion to: tcdr_schema_v1.0.yaml
+# Author: Julian Borges, MD, MS — Frontier Translational Research Lab
+# Affiliation: Department of Computer Science, Boston University
+# Date: 2026-05-18
+#
+# Classification levels:
+#   REQUIRED    — Fields without which a TCDR is incomplete and cannot be evaluated
+#   RECOMMENDED — Fields that substantially improve interpretability
+#   OPTIONAL    — Fields relevant to specific modalities or contexts
+#
+# Design rationale: Follows the MIAME/MI-CLAIM-GEN precedent of defining
+# minimum reportable elements for a new category of scientific object.
+# TCDR-MI addresses the therapeutic candidate as a structured decision unit,
+# a category not covered by any existing minimum information standard.
+
+tcdr_mi_metadata:
+  standard_name: "TCDR-MI"
+  full_name: "Minimum Information for Therapeutic Candidate Decision Records"
+  version: "1.0.0"
+  license: "Apache-2.0"
+  companion_schema: "tcdr_schema_v1.0.yaml"
+  total_fields: 58
+  required_count: 28
+  recommended_count: 18
+  optional_count: 12
+
+# =============================================================================
+# FIELD GROUP 1: Candidate Identity
+# =============================================================================
+field_group_1_candidate_identity:
+  - field: tcdr_id
+    mi_level: REQUIRED
+    rationale: "Unique identification is fundamental for record linkage, reproducibility, and audit"
+
+  - field: name
+    mi_level: REQUIRED
+    rationale: "Human readable identifier is necessary for communication and retrieval"
+
+  - field: canonical_smiles
+    mi_level: REQUIRED
+    conditional: "When modality is small_molecule"
+    rationale: "Chemical structure is the primary representation for small molecules"
+
+  - field: sequence
+    mi_level: REQUIRED
+    conditional: "When modality is peptide, antibody, antisense, sirna, mrna, or cell_therapy"
+    rationale: "Sequence is the primary representation for biologics and nucleic acid therapeutics"
+
+  - field: modality
+    mi_level: REQUIRED
+    rationale: "Modality determines which downstream fields are applicable and how comparisons are structured"
+
+  - field: version
+    mi_level: REQUIRED
+    rationale: "Versioning enables tracking of candidate evolution through iterative design cycles"
+
+  - field: created_date
+    mi_level: REQUIRED
+    rationale: "Temporal provenance is essential for audit and regulatory traceability"
+
+# =============================================================================
+# FIELD GROUP 2: Biological Mechanism
+# =============================================================================
+field_group_2_biological_mechanism:
+  - field: target_gene
+    mi_level: REQUIRED
+    rationale: "Primary biological target must be specified for any therapeutic candidate evaluation"
+
+  - field: target_protein
+    mi_level: REQUIRED
+    rationale: "Protein level identification is necessary for mechanism interpretation"
+
+  - field: uniprot_id
+    mi_level: REQUIRED
+    rationale: "Standardized accession enables cross-database linkage and computational validation"
+
+  - field: mechanism_of_action
+    mi_level: REQUIRED
+    rationale: "Mechanism is foundational to all downstream safety, efficacy, and delivery reasoning"
+
+  - field: evidence_type
+    mi_level: REQUIRED
+    rationale: "Distinguishing computational from experimental evidence is critical for risk assessment"
+
+  - field: evidence_references
+    mi_level: REQUIRED
+    rationale: "Verifiable references enable independent validation of mechanistic claims"
+
+# =============================================================================
+# FIELD GROUP 3: Disease and Tissue Context
+# =============================================================================
+field_group_3_disease_tissue_context:
+  - field: disease_name
+    mi_level: REQUIRED
+    rationale: "Disease indication is required for any therapeutic candidate evaluation"
+
+  - field: orphanet_id
+    mi_level: REQUIRED
+    conditional: "When disease is classified as rare"
+    rationale: "Standardized rare disease identifiers enable cross-study comparison and regulatory alignment"
+
+  - field: omim_id
+    mi_level: RECOMMENDED
+    rationale: "OMIM linkage provides genetic context but is not available for all indications"
+
+  - field: tissue_targets
+    mi_level: REQUIRED
+    rationale: "Tissue specificity determines delivery strategy, safety profile, and biodistribution"
+
+  - field: cell_types
+    mi_level: RECOMMENDED
+    rationale: "Cell type specificity improves mechanistic interpretability but may not be known at early stages"
+
+  - field: patient_population_estimate
+    mi_level: RECOMMENDED
+    rationale: "Population size informs commercial feasibility and trial design but may be imprecise for rare diseases"
+
+  - field: variant_ids
+    mi_level: OPTIONAL
+    rationale: "Variant specificity is relevant for genotype-targeted therapies but not universally applicable"
+
+# =============================================================================
+# FIELD GROUP 4: Modality Details
+# =============================================================================
+field_group_4_modality_details:
+  - field: modality
+    mi_level: REQUIRED
+    rationale: "Cross-reference to candidate identity; ensures structural consistency"
+
+  - field: vector_type
+    mi_level: REQUIRED
+    conditional: "When modality is aav_gene_therapy or lnp_gene_therapy"
+    rationale: "Vector type determines manufacturing, immunogenicity, and tropism"
+
+  - field: capsid_serotype
+    mi_level: REQUIRED
+    conditional: "When modality is aav_gene_therapy"
+    rationale: "Serotype determines tissue tropism and pre-existing immunity profile"
+
+  - field: delivery_route
+    mi_level: REQUIRED
+    rationale: "Delivery route is a primary determinant of biodistribution, safety, and dose"
+
+  - field: organ_targeting_strategy
+    mi_level: RECOMMENDED
+    rationale: "Targeting strategy improves interpretability but may be proprietary or undetermined at early stages"
+
+# =============================================================================
+# FIELD GROUP 5: Delivery and Biodistribution
+# =============================================================================
+field_group_5_delivery_biodistribution:
+  - field: predicted_tissue_penetration
+    mi_level: RECOMMENDED
+    rationale: "Tissue penetration informs efficacy prediction but quantitative data may not be available"
+
+  - field: blood_brain_barrier
+    mi_level: REQUIRED
+    rationale: "BBB status is a critical binary determinant for CNS indications and off-target CNS effects"
+
+  - field: mitochondrial_targeting
+    mi_level: REQUIRED
+    rationale: "Subcellular targeting is essential for mitochondrial disease candidates and increasingly relevant across modalities"
+
+  - field: subcellular_localization
+    mi_level: RECOMMENDED
+    rationale: "Localization context improves mechanism interpretation but may require experimental validation"
+
+  - field: dose_range_estimate
+    mi_level: RECOMMENDED
+    rationale: "Dose estimation supports safety assessment and trial design but precision varies by stage"
+
+# =============================================================================
+# FIELD GROUP 6: Manufacturability
+# =============================================================================
+field_group_6_manufacturability:
+  - field: synthetic_accessibility_score
+    mi_level: REQUIRED
+    conditional: "When modality is small_molecule"
+    rationale: "SA score is a standardized, computable metric for synthetic feasibility"
+
+  - field: manufacturing_platform
+    mi_level: REQUIRED
+    conditional: "When modality is antibody, aav_gene_therapy, lnp_gene_therapy, or cell_therapy"
+    rationale: "Platform choice determines yield, cost, scalability, and regulatory pathway"
+
+  - field: cogs_estimate_range
+    mi_level: RECOMMENDED
+    rationale: "Cost estimation informs translational viability but precise figures may be unavailable"
+
+  - field: scalability_assessment
+    mi_level: REQUIRED
+    rationale: "Scalability is a gate criterion for advancement from computational to wet-lab stages"
+
+  - field: cmc_readiness
+    mi_level: REQUIRED
+    rationale: "CMC readiness directly determines regulatory pathway and development timeline"
+
+# =============================================================================
+# FIELD GROUP 7: Safety
+# =============================================================================
+field_group_7_safety:
+  - field: predicted_off_targets
+    mi_level: REQUIRED
+    rationale: "Off-target enumeration is essential for any safety assessment and regulatory filing"
+
+  - field: hepatotoxicity_flag
+    mi_level: REQUIRED
+    rationale: "Hepatotoxicity is the most common cause of drug attrition and must always be assessed"
+
+  - field: cardiotoxicity_flag
+    mi_level: REQUIRED
+    rationale: "Cardiotoxicity is a leading cause of post-marketing withdrawal and must always be assessed"
+
+  - field: immunogenicity_risk
+    mi_level: REQUIRED
+    rationale: "Immunogenicity affects all modalities and is a primary safety consideration for biologics"
+
+  - field: known_contraindications
+    mi_level: RECOMMENDED
+    rationale: "Contraindication documentation improves clinical planning but may be incomplete at early stages"
+
+# =============================================================================
+# FIELD GROUP 8: Evidence Gaps
+# =============================================================================
+field_group_8_evidence_gaps:
+  - field: missing_data
+    mi_level: REQUIRED
+    rationale: "Explicit gap documentation prevents overconfident advancement decisions"
+
+  - field: uncertainty_sources
+    mi_level: REQUIRED
+    rationale: "Uncertainty enumeration is a governance requirement for responsible candidate advancement"
+
+  - field: confidence_level
+    mi_level: REQUIRED
+    rationale: "Calibrated confidence prevents premature resource commitment and enables portfolio comparison"
+
+  - field: key_experiments_needed
+    mi_level: REQUIRED
+    rationale: "Experiment prioritization bridges computational design to wet-lab validation"
+
+# =============================================================================
+# FIELD GROUP 9: Advancement Logic
+# =============================================================================
+field_group_9_advancement_logic:
+  - field: recommendation
+    mi_level: REQUIRED
+    rationale: "The advancement decision is the primary output of the TCDR evaluation process"
+
+  - field: rationale
+    mi_level: REQUIRED
+    rationale: "Decision rationale enables audit, contestation, and institutional learning"
+
+  - field: stage_gate_id
+    mi_level: RECOMMENDED
+    rationale: "Stage gate reference links the decision to a governance framework but may not exist in all contexts"
+
+  - field: decision_date
+    mi_level: REQUIRED
+    rationale: "Temporal anchoring of decisions is necessary for regulatory traceability"
+
+  - field: reviewer
+    mi_level: REQUIRED
+    rationale: "Reviewer identification enables accountability and conflict-of-interest disclosure"
+
+# =============================================================================
+# METADATA
+# =============================================================================
+metadata_fields:
+  - field: tcdr_version
+    mi_level: REQUIRED
+    rationale: "Instance versioning enables longitudinal tracking"
+
+  - field: schema_version
+    mi_level: REQUIRED
+    rationale: "Schema version ensures backward compatibility and migration support"
+
+  - field: platform_source
+    mi_level: OPTIONAL
+    rationale: "Platform provenance is useful but not required for standalone TCDR records"
+
+  - field: audit_trail_ref
+    mi_level: OPTIONAL
+    rationale: "Full audit trail references are valuable for governed pipelines but not universally available"

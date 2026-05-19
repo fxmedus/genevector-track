@@ -1,0 +1,276 @@
+---
+# PAPER GV4 — Evidence Gap Registry v1.0
+# Source: PAPER_GV3 Section 3.10 Evidence Gap Landscape
+# Author: Julian Borges, MD, MS
+# Date: 2026-05-18
+# Purpose: Formalize all evidence gaps from Paper 3 as structured objects
+#          for ERI computation in Paper 4
+---
+
+# ============================================================
+# UNIVERSAL EVIDENCE GAPS (affect all novel candidates)
+# ============================================================
+
+UEG-1:
+  id: UEG-1
+  name: No in vivo efficacy data
+  type: UNIVERSAL
+  description: >
+    All 14 novel candidates exist only as computational designs with predicted
+    binding and predicted ADMET properties. No cell-based assay, animal model,
+    or patient-derived tissue experiment has been performed.
+  resolution_activity: >
+    Synthesize top 5 candidates. Execute enzymatic activity assays (for
+    stabilizers/activators) or functional rescue assays in patient-derived
+    fibroblasts (for compensators/replacements).
+  cost_range_usd: [150000, 350000]
+  duration_range_months: [6, 12]
+  p_success: 0.70
+  affected_candidates:
+    - PKA-002
+    - KND-002
+    - DSA-001
+    - NDS-002
+    - SDA-002
+  affected_dimensions: [D1, D4]
+  delta_scores:
+    PKA-002: {D4: 0.15, D1: 0.05}
+    KND-002: {D4: 0.15, D1: 0.05}
+    DSA-001: {D4: 0.15, D1: 0.05}
+    NDS-002: {D4: 0.15, D1: 0.05}
+    SDA-002: {D4: 0.15, D1: 0.05}
+  dependencies: []
+  notes: >
+    Paper 3 Section 3.10 projects D4 increase from 0.20-0.25 to 0.35-0.40.
+    Delta of 0.15 is the midpoint. D1 increase of 0.05 reflects transition
+    from predicted-only to experimentally confirmed binding. This is the
+    highest-impact universal gap. p_success of 0.70 reflects literature
+    benchmark that 60-70% of computationally predicted actives show no
+    activity in biochemical assays; 0.70 is the probability that at least
+    one of five candidates shows target engagement.
+  substeps:
+    - name: Chemical synthesis (5 candidates)
+      cost_range_usd: [50000, 100000]
+      duration_months: [3, 6]
+    - name: Enzymatic/functional assays
+      cost_range_usd: [50000, 150000]
+      duration_months: [2, 4]
+    - name: Patient-derived fibroblast rescue
+      cost_range_usd: [50000, 100000]
+      duration_months: [3, 6]
+
+UEG-2:
+  id: UEG-2
+  name: No head-to-head comparison with reference compounds
+  type: UNIVERSAL
+  description: >
+    No direct assessment of whether novel candidates outperform established
+    therapies (idebenone, EPI-743, CoQ10) in the same experimental system.
+  resolution_activity: >
+    Test novel and reference compounds in parallel using identical cell lines,
+    concentrations (0.1, 1, 10 micromolar), and readouts (Seahorse XF
+    mitochondrial stress test, Complex I activity, ATP production).
+  cost_range_usd: [75000, 150000]
+  duration_range_months: [3, 6]
+  p_success: 0.85
+  affected_candidates:
+    - PKA-002
+    - KND-002
+    - DSA-001
+    - NDS-002
+    - SDA-002
+  affected_dimensions: [D1, D4]
+  delta_scores:
+    PKA-002: {D4: 0.10, D1: 0.05}
+    KND-002: {D4: 0.10, D1: 0.05}
+    DSA-001: {D4: 0.10, D1: 0.05}
+    NDS-002: {D4: 0.10, D1: 0.05}
+    SDA-002: {D4: 0.10, D1: 0.05}
+  dependencies: [UEG-1]
+  notes: >
+    Requires UEG-1 resolution first (candidates must be synthesized and
+    show some activity before head-to-head comparison is meaningful).
+    p_success of 0.85 reflects that experimental execution is
+    straightforward once compounds are in hand; the uncertainty is in
+    interpretation, not execution. Higher p_success than UEG-1 because
+    the experiment always produces data regardless of outcome direction.
+
+UEG-3:
+  id: UEG-3
+  name: No measured PK for matrix-targeted candidates
+  type: UNIVERSAL
+  description: >
+    Candidates requiring mitochondrial targeting peptide conjugation or TPP+
+    delivery for matrix accumulation have predicted but not measured PK.
+    Standard ADMET tools systematically misclassify TPP+ conjugated compounds.
+  resolution_activity: >
+    Mitochondrial fractionation assays for matrix-targeted candidates.
+    Measure actual mitochondrial/cytoplasmic concentration ratio in
+    isolated mitochondria and intact cells.
+  cost_range_usd: [40000, 80000]
+  duration_range_months: [2, 4]
+  p_success: 0.90
+  affected_candidates:
+    - NDS-002
+    - SDA-002
+  affected_dimensions: [D2, D3, D4]
+  delta_scores:
+    NDS-002: {D4: 0.05, D2: 0.05, D3: 0.05}
+    SDA-002: {D4: 0.05, D2: 0.05, D3: 0.05}
+  dependencies: [UEG-1]
+  notes: >
+    Only affects the 4 matrix-targeted candidates from the full library
+    (MCX-010, MCX-011, MCX-013, MCX-014). In the minimum portfolio, only
+    NDS-002 and SDA-002 are affected. p_success 0.90 because the assay
+    itself is well-established; the question is whether accumulation occurs,
+    not whether the experiment works. Connects to the TPP+ ADMET
+    misclassification finding from the governed discovery pipeline.
+
+# ============================================================
+# TARGET-SPECIFIC EVIDENCE GAPS
+# ============================================================
+
+TSG-PINK1:
+  id: TSG-PINK1
+  name: PINK1 G309D crystal structure
+  type: TARGET_SPECIFIC
+  description: >
+    The allosteric site prediction for PKA-002 depends on homology modeling
+    from wild-type PINK1 kinase structures. A crystal structure of the G309D
+    mutant would validate or invalidate the binding mode hypothesis.
+  resolution_activity: >
+    Express recombinant PINK1 G309D kinase domain. Crystallize and solve
+    structure by X-ray crystallography or cryo-EM. If co-crystallization
+    with PKA-002 succeeds, provides direct validation.
+  cost_range_usd: [80000, 200000]
+  duration_range_months: [6, 18]
+  p_success: 0.45
+  affected_candidates:
+    - PKA-002
+  affected_dimensions: [D1, D4, D5]
+  delta_scores:
+    PKA-002: {D4: 0.15, D1: 0.10, D5: 0.05}
+  dependencies: []
+  notes: >
+    Critical gap. If structure validates allosteric site, PKA-002 becomes
+    first experimentally confirmed PINK1 G309D-selective compound. If
+    structure invalidates, PKA-002 binding mode must be redesigned.
+    p_success 0.45 reflects protein crystallography success rates for
+    kinase mutants (membrane-associated, partially disordered).
+    This gap can be pursued in parallel with UEG-1 (no dependency).
+    High-risk, high-reward: if successful, D1 increase of 0.10 is the
+    largest single-candidate improvement in the registry.
+
+TSG-SDHA:
+  id: TSG-SDHA
+  name: Recombinant R589W SDHA protein
+  type: TARGET_SPECIFIC
+  description: >
+    No recombinant mutant SDHA protein is commercially available,
+    blocking biochemical screening of SDA-002 and SDA-005.
+  resolution_activity: >
+    Clone, express, and purify recombinant human R589W SDHA in E. coli
+    or insect cell expression system. Validate enzymatic activity and
+    develop succinate oxidation screening assay.
+  cost_range_usd: [30000, 60000]
+  duration_range_months: [3, 6]
+  p_success: 0.75
+  affected_candidates:
+    - SDA-002
+  affected_dimensions: [D1, D4]
+  delta_scores:
+    SDA-002: {D4: 0.10, D1: 0.05}
+  dependencies: []
+  notes: >
+    Prerequisite for any SDHA candidate advancement. Without recombinant
+    protein, no binding assay can be run. Can proceed in parallel with
+    all other gaps. p_success 0.75 reflects standard recombinant protein
+    expression success rates for soluble FAD-containing enzymes.
+
+TSG-DNM1L:
+  id: TSG-DNM1L
+  name: DNM1L stalk domain co-crystal
+  type: TARGET_SPECIFIC
+  description: >
+    The computationally proposed stalk-domain inhibition mechanism for
+    DSA-001 is novel. No co-crystal structure of any DRP1 inhibitor
+    bound at the stalk interface has been published.
+  resolution_activity: >
+    Express DRP1 stalk domain construct. Attempt co-crystallization
+    with DSA-001. If co-crystal fails, use cryo-EM of full-length
+    DRP1 oligomer with DSA-001 bound.
+  cost_range_usd: [100000, 250000]
+  duration_range_months: [6, 18]
+  p_success: 0.40
+  affected_candidates:
+    - DSA-001
+  affected_dimensions: [D1, D4, D5]
+  delta_scores:
+    DSA-001: {D4: 0.15, D1: 0.10, D5: 0.05}
+  dependencies: [UEG-1]
+  notes: >
+    Requires synthesized DSA-001 (dependency on UEG-1). Lowest p_success
+    in registry because stalk domain is a novel binding site with no
+    structural precedent for small molecule binding. If successful,
+    establishes a new druggable site on DRP1 — publishable as independent
+    structural biology contribution. If unsuccessful, DSA-001 mechanism
+    must be reconsidered.
+
+TSG-KEAP1:
+  id: TSG-KEAP1
+  name: CNS tissue Keap1 PPI disruption selectivity
+  type: TARGET_SPECIFIC
+  description: >
+    KND-002 is computationally predicted as BBB-penetrant, but Keap1-Nrf2
+    PPI disruption has been characterized primarily in hepatic and renal
+    tissue. CNS pharmacodynamic validation is required.
+  resolution_activity: >
+    Test KND-002 in primary cortical neuron cultures for Nrf2 nuclear
+    translocation (immunofluorescence) and Nrf2-dependent gene expression
+    (NQO1, HO-1 qPCR). In vivo BBB penetration study in mice with
+    brain/plasma ratio measurement.
+  cost_range_usd: [60000, 120000]
+  duration_range_months: [4, 8]
+  p_success: 0.65
+  affected_candidates:
+    - KND-002
+  affected_dimensions: [D2, D4, D7]
+  delta_scores:
+    KND-002: {D4: 0.10, D2: 0.05, D7: 0.10}
+  dependencies: [UEG-1]
+  notes: >
+    Requires synthesized KND-002. If BBB penetration confirmed and CNS
+    PD activity demonstrated, D7 increase of 0.10 is substantial because
+    it validates the strategic BBB claim. Keap1 kelch domain is well-
+    characterized in oncology so the PPI disruption itself is de-risked;
+    the uncertainty is CNS-specific pharmacology.
+
+TSG-NDUFV1:
+  id: TSG-NDUFV1
+  name: NDUFV1 FMN cleft accessibility in assembled Complex I
+  type: TARGET_SPECIFIC
+  description: >
+    The FMN binding cleft stabilization mechanism of NDS-004 was designed
+    using isolated NDUFV1 subunit structures. Accessibility of this site
+    in fully assembled Complex I embedded in the inner mitochondrial
+    membrane is uncertain.
+  resolution_activity: >
+    Cryo-EM of human Complex I with NDS-002/NDS-004 present.
+    Alternatively, hydrogen-deuterium exchange mass spectrometry (HDX-MS)
+    to map binding site accessibility in native membrane context.
+  cost_range_usd: [120000, 300000]
+  duration_range_months: [6, 18]
+  p_success: 0.50
+  affected_candidates:
+    - NDS-002
+  affected_dimensions: [D1, D4]
+  delta_scores:
+    NDS-002: {D4: 0.10, D1: 0.10}
+  dependencies: [UEG-1]
+  notes: >
+    Technically demanding. Cryo-EM of membrane-embedded Complex I with
+    small molecule is at the frontier of structural biology. HDX-MS is
+    a more feasible alternative. p_success 0.50 reflects the technical
+    difficulty. If the FMN cleft is accessible, this validates an entirely
+    new druggable site on Complex I distinct from the known ubiquinone
+    binding channel.

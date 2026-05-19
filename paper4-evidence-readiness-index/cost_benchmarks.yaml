@@ -1,0 +1,166 @@
+---
+# PAPER GV4 — Experimental Cost Benchmarks
+# Compiled: 2026-05-18
+# Sources: Academic core facility fee schedules, CRO literature, NIH Reporter
+---
+
+# Per-activity cost estimates used to populate gap_registry.yaml
+
+compound_synthesis:
+  description: Custom synthesis of novel small molecule (multi-step, non-trivial)
+  cost_per_compound_usd: [5000, 25000]
+  notes: >
+    Range reflects complexity. Simple 3-step synthesis at Asian CRO: $5K-8K.
+    Complex 6-8 step with chiral centers at US/EU CRO: $15K-25K.
+    MitoCoreX candidates are medium complexity (4-6 steps estimated).
+    Budget estimate: $10K-20K per compound, 5 compounds = $50K-100K.
+  sources:
+    - ChiroBlock GmbH pricing model (2018, publicly described)
+    - Industry benchmark: $5K-15K per compound (Symeres, BioAscent class)
+
+enzymatic_activity_assay:
+  description: Biochemical target engagement assay (IC50 or EC50 determination)
+  cost_per_target_usd: [5000, 15000]
+  notes: >
+    Includes assay development, dose-response curves (8-point), triplicate.
+    Lower end for established assay (Complex I activity kit). Higher end
+    for custom assay (PINK1 kinase, SDHA succinate oxidation).
+  sources:
+    - Eurofins DiscoverX standard kinase panel pricing
+    - Charles River biochemical screening packages
+
+seahorse_mito_stress_test:
+  description: Seahorse XFe96 mitochondrial stress test
+  cost_per_plate_usd: [200, 500]
+  notes: >
+    MCW academic rate: $200/plate. SickKids external: $475/plate.
+    UC Davis academic: $229/assay. Oxford collaborative: £400/plate.
+    Budget: $300/plate average. Need ~20 plates for 5 compounds
+    x 4 concentrations x replicates = $6K-10K total.
+  sources:
+    - MCW Redox Core ($200/plate)
+    - SPARC SickKids ($475 external)
+    - UC Davis ($229 academic, $306 nonprofit)
+
+patient_derived_fibroblast_rescue:
+  description: Functional rescue assay in patient-derived fibroblasts
+  cost_per_cell_line_usd: [15000, 30000]
+  notes: >
+    Includes fibroblast procurement ($2K-5K from Coriell/NIGMS),
+    culture and expansion ($3K-5K), treatment protocol development
+    ($5K-10K), readouts (ATP, OCR, cell viability, $5K-10K).
+    Need 2-3 cell lines per target minimum.
+  sources:
+    - Coriell Institute cell line catalog pricing
+    - Academic core facility estimates
+
+recombinant_protein_expression:
+  description: Clone, express, purify recombinant protein (E. coli or insect cell)
+  cost_per_protein_usd: [8000, 25000]
+  notes: >
+    E. coli straightforward: $8K-12K. Insect cell (baculovirus): $15K-25K.
+    Includes construct design, expression optimization, purification,
+    characterization (SDS-PAGE, Western, activity assay).
+    SDHA R589W mutant: insect cell likely needed = $15K-25K.
+  sources:
+    - BCM Recombinant Protein Core fee schedule
+    - Charles River protein production services
+    - Concept Life Sciences protein production
+
+protein_crystallography:
+  description: Crystal structure determination (from purified protein to solved structure)
+  cost_per_structure_usd: [50000, 150000]
+  notes: >
+    Crystallization screening + optimization: $10K-20K.
+    Data collection (synchrotron access): $5K-15K.
+    Structure solution and refinement: $10K-20K.
+    If co-crystal with ligand, add $20K-40K.
+    Full gene-to-structure: $50K-150K.
+    Kinase mutant (PINK1 G309D): higher end due to difficulty.
+    Large complex (Complex I cryo-EM): $120K-300K.
+  sources:
+    - Helix BioStructures (milestone-based)
+    - Creative BioStructure fee-for-service
+    - Proteros biostructures integrated packages
+
+cryo_em:
+  description: Cryo-EM structure of large complex
+  cost_per_structure_usd: [80000, 250000]
+  notes: >
+    Grid preparation + screening: $10K-20K.
+    Data collection (microscope time): $30K-80K.
+    Image processing + reconstruction: $20K-50K.
+    Model building + refinement: $20K-50K.
+    Complex I + small molecule: near upper end.
+  sources:
+    - Academic facility rates (Harvard, NIH CryoEM)
+    - NovAliX structural biology services
+
+hdx_ms:
+  description: Hydrogen-deuterium exchange mass spectrometry
+  cost_per_study_usd: [15000, 40000]
+  notes: >
+    More accessible alternative to cryo-EM for binding site mapping.
+    Includes protein preparation, HDX labeling, LC-MS analysis,
+    data processing, binding site mapping.
+  sources:
+    - ExSAR Corporation HDX-MS services
+    - Academic core facility estimates
+
+in_vivo_bbb_penetration:
+  description: In vivo BBB penetration study (mice, brain/plasma ratio)
+  cost_per_compound_usd: [20000, 50000]
+  notes: >
+    Includes compound formulation, IV/PO dosing in mice (n=3-5/timepoint),
+    plasma and brain sampling at 3-4 timepoints, LC-MS/MS bioanalysis,
+    brain/plasma ratio calculation.
+  sources:
+    - Pharmacokinetics CRO standard package (Pharmaron, WuXi)
+    - Academic pharmacology core estimates
+
+primary_neuron_culture:
+  description: Primary cortical neuron culture and pharmacodynamic assay
+  cost_per_study_usd: [15000, 30000]
+  notes: >
+    Includes neuron isolation and culture, compound treatment,
+    immunofluorescence (Nrf2 nuclear translocation), qPCR (NQO1, HO-1).
+    Multiple concentrations, time points, replicates.
+  sources:
+    - Academic neuroscience core facility estimates
+
+mitochondrial_fractionation:
+  description: Mitochondrial/cytoplasmic fractionation and accumulation assay
+  cost_per_compound_usd: [8000, 15000]
+  notes: >
+    Includes cell culture, fractionation protocol, LC-MS quantification
+    of compound in mitochondrial vs cytoplasmic fractions.
+    Standard technique but requires compound-specific method development.
+  sources:
+    - Academic pharmacology/metabolism core estimates
+
+# Summary budget scenarios for Paper 4
+
+budget_scenarios:
+  tier_1_minimum:
+    budget_usd: 50000
+    description: >
+      Seed funding level. Covers synthesis of 2-3 candidates +
+      basic biochemical screening. Sufficient for one target validation.
+    funding_sources: [personal_funds, small_institutional_grant]
+
+  tier_2_moderate:
+    budget_usd: 150000
+    description: >
+      Small grant level (UMDF pilot, institutional seed, angel).
+      Covers synthesis of 5 candidates + biochemical screening +
+      one structural study or one in vivo study.
+    funding_sources: [UMDF_research_grant, NIH_R21_exploratory, institutional_seed]
+
+  tier_3_comprehensive:
+    budget_usd: 500000
+    description: >
+      NIH SBIR Phase I or major foundation grant.
+      Covers full UEG-1 resolution + 2-3 target-specific gaps +
+      head-to-head comparison. Moves portfolio from computational
+      to experimentally validated.
+    funding_sources: [NIH_SBIR_Phase_I, NIH_R01, UMDF_full_grant, MitoAction]

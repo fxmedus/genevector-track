@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use the TCDR schema, ERI framework, or any artifacts from this repository, please cite as below."
+title: "GeneVector Thesis Track: A Four-Paper Framework for Computational Drug Discovery Evaluation and Translational Gap Resolution"
+type: software
+authors:
+  - family-names: Borges
+    given-names: Julian Yin Vieira
+    orcid: "https://orcid.org/0009-0001-9929-3135"
+    affiliation: "FxMEDUS LLC; Department of Computer Science, Boston University"
+    email: jyborges@bu.edu
+repository-code: "https://github.com/fxmedus/genevector-track"
+url: "https://julian-borges-md.github.io/frontier-lab/"
+license: Apache-2.0
+version: "1.0.0"
+date-released: "2026-05-18"
+keywords:
+  - computational-biology
+  - drug-discovery
+  - therapeutic-candidate-decision-record
+  - evidence-readiness-index
+  - mitochondrial-disease
+  - multi-criteria-decision-analysis
+  - translational-research
+references:
+  - type: article
+    title: "The Therapeutic Candidate Decision Record (TCDR)"
+    authors:
+      - family-names: Borges
+        given-names: Julian Yin Vieira
+    year: 2026
+    url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796779"
+  - type: article
+    title: "MitoCoreX Case Series"
+    authors:
+      - family-names: Borges
+        given-names: Julian Yin Vieira
+    year: 2026
+    url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796818"
+  - type: article
+    title: "The Evidence Readiness Index (ERI)"
+    authors:
+      - family-names: Borges
+        given-names: Julian Yin Vieira
+    year: 2026
+    url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796898"
