@@ -6,9 +6,9 @@
 <p align="center">
   <a href="https://github.com/fxmedus/genevector-track/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square" alt="License"></a>
   <a href="https://orcid.org/0009-0001-9929-3135"><img src="https://img.shields.io/badge/ORCID-0009--0001--9929--3135-a6ce39?style=flat-square&logo=orcid&logoColor=white" alt="ORCID"></a>
-  <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796779"><img src="https://img.shields.io/badge/SSRN-P1%20TCDR-154360?style=flat-square" alt="SSRN P1"></a>
-  <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796818"><img src="https://img.shields.io/badge/SSRN-P3%20Case%20Series-154360?style=flat-square" alt="SSRN P3"></a>
-  <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796898"><img src="https://img.shields.io/badge/SSRN-P4%20ERI-154360?style=flat-square" alt="SSRN P4"></a>
+  <a href="https://doi.org/10.2139/ssrn.6796779"><img src="https://img.shields.io/badge/SSRN-P1%20TCDR-154360?style=flat-square" alt="SSRN P1"></a>
+  <a href="https://doi.org/10.2139/ssrn.6796818"><img src="https://img.shields.io/badge/SSRN-P3%20Case%20Series-154360?style=flat-square" alt="SSRN P3"></a>
+  <a href="https://doi.org/10.2139/ssrn.6796898"><img src="https://img.shields.io/badge/SSRN-P4%20ERI-154360?style=flat-square" alt="SSRN P4"></a>
   <img src="https://img.shields.io/badge/Papers-4%2F4%20Complete-success?style=flat-square" alt="Status">
   <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
 </p>
@@ -94,10 +94,10 @@ genevector-track/
 
 | Paper | Preprint | Status |
 |:---:|----------|--------|
-| P1 — TCDR Standard | [SSRN 6796779](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796779) | Available |
+| P1 — TCDR Standard | [SSRN 6796779](https://doi.org/10.2139/ssrn.6796779) | Available |
 | P2 — TCDR Engine | Pending (IP review) | In preparation |
-| P3 — MitoCoreX Case Series | [SSRN 6796818](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796818) | Available |
-| P4 — Evidence Readiness Index | [SSRN 6796898](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6796898) | Available |
+| P3 — MitoCoreX Case Series | [SSRN 6796818](https://doi.org/10.2139/ssrn.6796818) | Available |
+| P4 — Evidence Readiness Index | [SSRN 6796898](https://doi.org/10.2139/ssrn.6796898) | Available |
 
 ---
 
